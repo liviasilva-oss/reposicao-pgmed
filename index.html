@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard · Reposição de Módulos · Pós-Graduação Médica</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --navy: #0d1b3e;
+    --navy-mid: #162552;
+    --navy-light: #1e3470;
+    --gold: #c9a84c;
+    --gold-light: #e0c070;
+    --gold-pale: #f5eedc;
+    --white: #ffffff;
+    --off-white: #f8f7f4;
+    --border: #ddd8cc;
+    --text-dark: #1a1a2e;
+    --text-mid: #4a4e6a;
+    --text-light: #8a8fa8;
+    --red-soft: #c0392b;
+    --green-soft: #1a6b3a;
+    --shadow: 0 4px 24px rgba(13,27,62,0.10);
+    --shadow-sm: 0 2px 8px rgba(13,27,62,0.07);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--off-white);
+    color: var(--text-dark);
+    min-height: 100vh;
+  }
+
+  /* ─── HEADER ─────────────────────────────── */
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(13,27,62,0.25);
+  }
+
+  .header-inner {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .logo-icon {
+    width: 44px;
+    height: 44px;
+    background: var(--gold);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+
+  .header-titles h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    color: var(--white);
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+  }
+
+  .header-titles p {
+    font-size: 0.72rem;
+    color: var(--gold-light);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 2px;
+    font-weight: 500;
+  }
+
+  .header-date {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.55);
+    text-align: right;
+  }
+
+  /* ─── MAIN WRAPPER ───────────────────────── */
+  main {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 28px 32px 48px;
+  }
+
+  /* ─── KPI CARDS ──────────────────────────── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .kpi-card {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 20px 24px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    transition: box-shadow 0.2s;
+  }
+
+  .kpi-card:hover { box-shadow: var(--shadow); }
+
+  .kpi-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .kpi-icon.blue { background: #eef2ff; }
+  .kpi-icon.gold { background: var(--gold-pale); }
+  .kpi-icon.green { background: #edfaf3; }
+  .kpi-icon.red { background: #fdecea; }
+
+  .kpi-body { flex: 1; min-width: 0; }
+
+  .kpi-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-light);
+    margin-bottom: 4px;
+  }
+
+  .kpi-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1;
+  }
+
+  .kpi-sub {
+    font-size: 0.72rem;
+    color: var(--text-light);
+    margin-top: 4px;
+  }
+
+  /* ─── UNIT BREAKDOWN ─────────────────────── */
+  .unit-breakdown {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .unit-chip {
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 20px;
+    background: var(--navy);
+    color: var(--gold-light);
+    letter-spacing: 0.04em;
+  }
+
+  /* ─── TOOLBAR ────────────────────────────── */
+  .toolbar {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-end;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .filter-group label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-light);
+  }
+
+  .filter-group select,
+  .filter-group input[type="date"] {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.83rem;
+    color: var(--text-dark);
+    background: var(--off-white);
+    outline: none;
+    min-width: 160px;
+    transition: border-color 0.2s;
+  }
+
+  .filter-group select:focus,
+  .filter-group input[type="date"]:focus {
+    border-color: var(--navy-light);
+    background: var(--white);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 18px;
+    border-radius: 9px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.83rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+    border: none;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: var(--navy);
+    color: var(--white);
+    box-shadow: 0 2px 8px rgba(13,27,62,0.18);
+  }
+
+  .btn-primary:hover {
+    background: var(--navy-light);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(13,27,62,0.22);
+  }
+
+  .btn-gold {
+    background: var(--gold);
+    color: var(--navy);
+    box-shadow: 0 2px 8px rgba(201,168,76,0.25);
+  }
+
+  .btn-gold:hover {
+    background: var(--gold-light);
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-mid);
+    border: 1.5px solid var(--border);
+  }
+
+  .btn-ghost:hover {
+    background: var(--off-white);
+    color: var(--navy);
+  }
+
+  .toolbar-actions {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    margin-left: auto;
+    flex-wrap: wrap;
+  }
+
+  /* ─── TABLE WRAPPER ──────────────────────── */
+  .table-wrapper {
+    background: var(--white);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+
+  .table-header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .table-header-bar h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--navy);
+  }
+
+  .record-count {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    background: var(--off-white);
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    font-weight: 500;
+  }
+
+  .table-scroll {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1100px;
+  }
+
+  thead {
+    background: linear-gradient(90deg, var(--navy) 0%, var(--navy-light) 100%);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+
+  th {
+    padding: 13px 14px;
+    text-align: left;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gold-light);
+    white-space: nowrap;
+    border-right: 1px solid rgba(255,255,255,0.07);
+  }
+
+  th:last-child { border-right: none; }
+
+  th.col-buffet {
+    background: rgba(201,168,76,0.12);
+    color: var(--gold);
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+
+  tbody tr:hover { background: #f0f4ff; }
+
+  tbody tr.highlight-buffet { background: #fffbf0; }
+  tbody tr.highlight-buffet:hover { background: #fff6e0; }
+
+  td {
+    padding: 10px 14px;
+    font-size: 0.83rem;
+    color: var(--text-dark);
+    vertical-align: middle;
+    border-right: 1px solid var(--border);
+  }
+
+  td:last-child { border-right: none; }
+
+  td[contenteditable="true"] {
+    outline: none;
+    cursor: text;
+    border-radius: 5px;
+    transition: background 0.15s, box-shadow 0.15s;
+    min-width: 80px;
+    position: relative;
+  }
+
+  td[contenteditable="true"]:hover {
+    background: var(--off-white);
+  }
+
+  td[contenteditable="true"]:focus {
+    background: #eef2ff;
+    box-shadow: inset 0 0 0 2px var(--navy-light);
+  }
+
+  td[contenteditable="true"]:empty::before {
+    content: attr(data-placeholder);
+    color: var(--text-light);
+    font-style: italic;
+    font-size: 0.78rem;
+    pointer-events: none;
+  }
+
+  /* ─── DATE INPUT IN TABLE ─────────────────── */
+  .date-cell input[type="date"] {
+    border: none;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.83rem;
+    color: var(--text-dark);
+    outline: none;
+    width: 100%;
+    cursor: pointer;
+    padding: 2px 0;
+  }
+
+  .date-cell input[type="date"]:focus {
+    background: #eef2ff;
+    border-radius: 4px;
+    padding: 2px 4px;
+  }
+
+  /* ─── CHECKBOX ───────────────────────────── */
+  .buffet-cell {
+    text-align: center;
+    background: rgba(201,168,76,0.04);
+  }
+
+  .buffet-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+
+  .buffet-toggle input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--navy);
+    cursor: pointer;
+  }
+
+  .buffet-label {
+    color: var(--text-light);
+  }
+
+  .buffet-label.yes {
+    color: var(--green-soft);
+  }
+
+  /* ─── DELETE BTN ──────────────────────────── */
+  .btn-delete {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    background: transparent;
+    border: 1.5px solid #e0d8d0;
+    color: var(--text-light);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    font-size: 14px;
+    margin: 0 auto;
+  }
+
+  .btn-delete:hover {
+    background: #fdecea;
+    border-color: #e57373;
+    color: var(--red-soft);
+  }
+
+  /* ─── EMPTY STATE ─────────────────────────── */
+  .empty-state {
+    text-align: center;
+    padding: 56px 24px;
+    color: var(--text-light);
+  }
+
+  .empty-state .empty-icon { font-size: 3rem; margin-bottom: 12px; }
+  .empty-state p { font-size: 0.9rem; margin-bottom: 16px; }
+
+  /* ─── TOAST ───────────────────────────────── */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    background: var(--navy);
+    color: var(--white);
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    box-shadow: 0 8px 24px rgba(13,27,62,0.25);
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(.34,1.56,.64,1);
+    z-index: 999;
+    border-left: 4px solid var(--gold);
+  }
+
+  .toast.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  /* ─── FOOTER ──────────────────────────────── */
+  footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.72rem;
+    color: var(--text-light);
+    border-top: 1px solid var(--border);
+    margin-top: 16px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ─── ROW NUMBER ──────────────────────────── */
+  .row-num {
+    font-size: 0.7rem;
+    color: var(--text-light);
+    text-align: center;
+    user-select: none;
+    min-width: 28px;
+  }
+
+  /* ─── RESPONSIVE ──────────────────────────── */
+  @media (max-width: 768px) {
+    main { padding: 16px; }
+    .header-inner { padding: 14px 16px; }
+    .kpi-grid { grid-template-columns: 1fr 1fr; }
+    .toolbar { flex-direction: column; align-items: stretch; }
+    .toolbar-actions { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── HEADER ─── -->
+<header>
+  <div class="header-inner">
+    <div class="logo-area">
+      <div class="logo-icon">🏥</div>
+      <div class="header-titles">
+        <h1>Controle de Reposição de Módulos</h1>
+        <p>Pós-Graduação Médica · Gestão Operacional</p>
+      </div>
+    </div>
+    <div class="header-date" id="headerDate"></div>
+  </div>
+</header>
+
+<!-- ─── MAIN ─── -->
+<main>
+
+  <!-- KPI Cards -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-icon blue">👨‍🎓</div>
+      <div class="kpi-body">
+        <div class="kpi-label">Total de Alunos</div>
+        <div class="kpi-value" id="kpi-total">0</div>
+        <div class="kpi-sub">cadastrados no sistema</div>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon gold">🏢</div>
+      <div class="kpi-body">
+        <div class="kpi-label">Reposições por Unidade</div>
+        <div class="kpi-value" id="kpi-units">—</div>
+        <div class="unit-breakdown" id="kpi-units-detail"></div>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon green">🍽️</div>
+      <div class="kpi-body">
+        <div class="kpi-label">Com Necessidade de Buffet</div>
+        <div class="kpi-value" id="kpi-buffet">0</div>
+        <div class="kpi-sub">aulas requerem aumento</div>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon red">📅</div>
+      <div class="kpi-body">
+        <div class="kpi-label">Próxima Reposição</div>
+        <div class="kpi-value" style="font-size:1.2rem;padding-top:4px" id="kpi-next">—</div>
+        <div class="kpi-sub" id="kpi-next-sub"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="filter-group">
+      <label>Filtrar por Unidade</label>
+      <select id="filterUnidade" onchange="applyFilters()">
+        <option value="">Todas as unidades</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Filtrar por Turma</label>
+      <select id="filterTurma" onchange="applyFilters()">
+        <option value="">Todas as turmas</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Filtrar por Data</label>
+      <input type="date" id="filterData" onchange="applyFilters()">
+    </div>
+    <div class="toolbar-actions">
+      <button class="btn btn-ghost" onclick="clearFilters()">✕ Limpar Filtros</button>
+      <button class="btn btn-primary" onclick="addRow()">＋ Adicionar Aluno</button>
+      <button class="btn btn-gold" onclick="exportCSV()">⬇ Exportar CSV</button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrapper">
+    <div class="table-header-bar">
+      <h2>Registro de Reposições</h2>
+      <span class="record-count" id="recordCount">0 registros</span>
+    </div>
+    <div class="table-scroll">
+      <table id="mainTable">
+        <thead>
+          <tr>
+            <th style="width:32px">#</th>
+            <th>Nome do Aluno</th>
+            <th>Turma (Origem)</th>
+            <th>Unidade (Origem)</th>
+            <th>Turma p/ Reposição</th>
+            <th>Unidade p/ Reposição</th>
+            <th>Data da Aula</th>
+            <th>Disciplina</th>
+            <th class="col-buffet" style="width:140px">🍽️ Buffet</th>
+            <th style="width:48px; text-align:center">⚙</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+        </tbody>
+      </table>
+      <div id="emptyState" class="empty-state" style="display:none">
+        <div class="empty-icon">📋</div>
+        <p>Nenhum registro encontrado.<br>Clique em <strong>Adicionar Aluno</strong> para começar.</p>
+        <button class="btn btn-primary" onclick="addRow()">＋ Adicionar Primeiro Aluno</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Dashboard de Reposição · Pós-Graduação Médica &nbsp;·&nbsp; Dados salvos localmente no navegador
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ─── STATE ────────────────────────────────────────
+  let rows = [];
+  let nextId = 1;
+  let activeFilters = { unidade: '', turma: '', data: '' };
+
+  // ─── INIT ─────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', () => {
+    updateHeaderDate();
+    loadData();
+    if (rows.length === 0) {
+      seedSampleData();
+    }
+    renderAll();
+  });
+
+  function updateHeaderDate() {
+    const now = new Date();
+    const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('headerDate').innerHTML =
+      now.toLocaleDateString('pt-BR', opts) + '<br>' +
+      '<span style="font-size:0.7rem;color:rgba(255,255,255,0.4)">Última atualização: ' +
+      now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) + '</span>';
+  }
+
+  // ─── DATA SEED ────────────────────────────────────
+  function seedSampleData() {
+    const samples = [
+      { nome: 'Ana Paula Ferreira', turmaOrigem: 'Turma A – 2024', unidadeOrigem: 'Campinas', turmaRepo: 'Turma B – 2024', unidadeRepo: 'Consolação', data: '2025-05-12', disciplina: 'Clínica Médica', buffet: false },
+      { nome: 'Carlos Eduardo Lima', turmaOrigem: 'Turma B – 2024', unidadeOrigem: 'Consolação', turmaRepo: 'Turma C – 2024', unidadeRepo: 'Brasília', data: '2025-05-15', disciplina: 'Cardiologia', buffet: true },
+      { nome: 'Mariana Santos Costa', turmaOrigem: 'Turma C – 2024', unidadeOrigem: 'Brasília', turmaRepo: 'Turma A – 2024', unidadeRepo: 'Campinas', data: '2025-05-20', disciplina: 'Neurologia', buffet: false },
+    ];
+    samples.forEach(s => {
+      rows.push({ id: nextId++, ...s });
+    });
+    saveData();
+  }
+
+  // ─── PERSISTENCE ──────────────────────────────────
+  function saveData() {
+    localStorage.setItem('posgrad_repos_rows', JSON.stringify(rows));
+    localStorage.setItem('posgrad_repos_nextid', nextId);
+  }
+
+  function loadData() {
+    const saved = localStorage.getItem('posgrad_repos_rows');
+    const savedId = localStorage.getItem('posgrad_repos_nextid');
+    if (saved) rows = JSON.parse(saved);
+    if (savedId) nextId = parseInt(savedId);
+  }
+
+  // ─── ADD ROW ───────────────────────────────────────
+  function addRow() {
+    const today = new Date().toISOString().split('T')[0];
+    const row = {
+      id: nextId++,
+      nome: '', turmaOrigem: '', unidadeOrigem: '',
+      turmaRepo: '', unidadeRepo: '',
+      data: today, disciplina: '', buffet: false
+    };
+    rows.unshift(row);
+    saveData();
+    renderAll();
+    // Focus first cell of new row
+    setTimeout(() => {
+      const firstCell = document.querySelector('#tableBody tr:first-child td[contenteditable]');
+      if (firstCell) firstCell.focus();
+    }, 50);
+    showToast('✓ Novo aluno adicionado');
+  }
+
+  // ─── DELETE ROW ────────────────────────────────────
+  function deleteRow(id) {
+    if (!confirm('Remover este registro?')) return;
+    rows = rows.filter(r => r.id !== id);
+    saveData();
+    renderAll();
+    showToast('Registro removido');
+  }
+
+  // ─── UPDATE CELL ──────────────────────────────────
+  function updateCell(id, field, value) {
+    const row = rows.find(r => r.id === id);
+    if (!row) return;
+    row[field] = value;
+    saveData();
+    updateKPIs();
+    updateFilterOptions();
+  }
+
+  function updateBuffet(id, checked) {
+    const row = rows.find(r => r.id === id);
+    if (!row) return;
+    row.buffet = checked;
+    const tr = document.querySelector(`tr[data-id="${id}"]`);
+    if (tr) {
+      if (checked) tr.classList.add('highlight-buffet');
+      else tr.classList.remove('highlight-buffet');
+    }
+    const lbl = document.querySelector(`tr[data-id="${id}"] .buffet-label`);
+    if (lbl) {
+      lbl.textContent = checked ? 'Sim' : 'Não';
+      lbl.className = 'buffet-label' + (checked ? ' yes' : '');
+    }
+    saveData();
+    updateKPIs();
+  }
+
+  function updateDate(id, value) {
+    const row = rows.find(r => r.id === id);
+    if (!row) return;
+    row.data = value;
+    saveData();
+    updateKPIs();
+  }
+
+  // ─── RENDER ───────────────────────────────────────
+  function getFilteredRows() {
+    return rows.filter(r => {
+      const matchU = !activeFilters.unidade ||
+        r.unidadeOrigem.toLowerCase().includes(activeFilters.unidade.toLowerCase()) ||
+        r.unidadeRepo.toLowerCase().includes(activeFilters.unidade.toLowerCase());
+      const matchT = !activeFilters.turma ||
+        r.turmaOrigem.toLowerCase().includes(activeFilters.turma.toLowerCase()) ||
+        r.turmaRepo.toLowerCase().includes(activeFilters.turma.toLowerCase());
+      const matchD = !activeFilters.data || r.data === activeFilters.data;
+      return matchU && matchT && matchD;
+    });
+  }
+
+  function renderAll() {
+    updateFilterOptions();
+    renderTable();
+    updateKPIs();
+  }
+
+  function renderTable() {
+    const tbody = document.getElementById('tableBody');
+    const filtered = getFilteredRows();
+    const empty = document.getElementById('emptyState');
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = '';
+      empty.style.display = 'block';
+      document.getElementById('recordCount').textContent = '0 registros';
+      return;
+    }
+
+    empty.style.display = 'none';
+    document.getElementById('recordCount').textContent =
+      filtered.length + (filtered.length === 1 ? ' registro' : ' registros') +
+      (filtered.length < rows.length ? ' (filtrado de ' + rows.length + ')' : '');
+
+    tbody.innerHTML = filtered.map((r, idx) => `
+      <tr data-id="${r.id}" class="${r.buffet ? 'highlight-buffet' : ''}">
+        <td class="row-num">${idx + 1}</td>
+        <td contenteditable="true" data-placeholder="Nome completo"
+            onblur="updateCell(${r.id},'nome',this.innerText.trim())"
+            onkeydown="handleKey(event)">${escHtml(r.nome)}</td>
+        <td contenteditable="true" data-placeholder="Ex: Turma A – 2024"
+            onblur="updateCell(${r.id},'turmaOrigem',this.innerText.trim())"
+            onkeydown="handleKey(event)">${escHtml(r.turmaOrigem)}</td>
+        <td contenteditable="true" data-placeholder="Ex: Unidade Centro"
+            onblur="updateCell(${r.id},'unidadeOrigem',this.innerText.trim())"
+            onkeydown="handleKey(event)">${escHtml(r.unidadeOrigem)}</td>
+        <td contenteditable="true" data-placeholder="Ex: Turma B – 2024"
+            onblur="updateCell(${r.id},'turmaRepo',this.innerText.trim())"
+            onkeydown="handleKey(event)">${escHtml(r.turmaRepo)}</td>
+        <td contenteditable="true" data-placeholder="Ex: Unidade Sul"
+            onblur="updateCell(${r.id},'unidadeRepo',this.innerText.trim())"
+            onkeydown="handleKey(event)">${escHtml(r.unidadeRepo)}</td>
+        <td class="date-cell">
+          <input type="date" value="${r.data || ''}"
+            onchange="updateDate(${r.id}, this.value)">
+        </td>
+        <td contenteditable="true" data-placeholder="Ex: Cardiologia"
+            onblur="updateCell(${r.id},'disciplina',this.innerText.trim())"
+            onkeydown="handleKey(event)">${escHtml(r.disciplina)}</td>
+        <td class="buffet-cell">
+          <label class="buffet-toggle">
+            <input type="checkbox" ${r.buffet ? 'checked' : ''}
+              onchange="updateBuffet(${r.id}, this.checked)">
+            <span class="buffet-label ${r.buffet ? 'yes' : ''}">${r.buffet ? 'Sim' : 'Não'}</span>
+          </label>
+        </td>
+        <td style="text-align:center">
+          <button class="btn-delete" onclick="deleteRow(${r.id})" title="Remover">✕</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function handleKey(e) {
+    if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); }
+    if (e.key === 'Escape') { e.target.blur(); }
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      const cells = Array.from(document.querySelectorAll('td[contenteditable="true"], td.date-cell input'));
+      const idx = cells.indexOf(e.target);
+      if (idx > -1 && cells[idx + 1]) cells[idx + 1].focus();
+    }
+  }
+
+  // ─── KPIs ─────────────────────────────────────────
+  function updateKPIs() {
+    document.getElementById('kpi-total').textContent = rows.length;
+
+    const buffetCount = rows.filter(r => r.buffet).length;
+    document.getElementById('kpi-buffet').textContent = buffetCount;
+
+    // Units breakdown
+    const unitMap = {};
+    rows.forEach(r => {
+      const u = r.unidadeRepo || r.unidadeOrigem || '—';
+      if (u && u !== '—') unitMap[u] = (unitMap[u] || 0) + 1;
+    });
+    const unitKeys = Object.keys(unitMap);
+    const kpiUnits = document.getElementById('kpi-units');
+    const kpiDetail = document.getElementById('kpi-units-detail');
+    kpiUnits.textContent = unitKeys.length || '—';
+    kpiDetail.innerHTML = unitKeys
+      .sort((a, b) => unitMap[b] - unitMap[a])
+      .slice(0, 5)
+      .map(u => `<span class="unit-chip">${u}: ${unitMap[u]}</span>`)
+      .join('');
+
+    // Next date
+    const today = new Date().toISOString().split('T')[0];
+    const upcoming = rows
+      .filter(r => r.data && r.data >= today)
+      .sort((a, b) => a.data.localeCompare(b.data));
+    const kpiNext = document.getElementById('kpi-next');
+    const kpiNextSub = document.getElementById('kpi-next-sub');
+    if (upcoming.length > 0) {
+      const d = upcoming[0].data;
+      const [y, m, day] = d.split('-');
+      kpiNext.textContent = `${day}/${m}/${y}`;
+      kpiNextSub.textContent = upcoming[0].disciplina || upcoming[0].nome || '—';
+    } else {
+      kpiNext.textContent = '—';
+      kpiNextSub.textContent = 'sem reposições futuras';
+    }
+  }
+
+  // ─── FILTERS ──────────────────────────────────────
+  function updateFilterOptions() {
+    const unidades = [...new Set(
+      rows.flatMap(r => [r.unidadeOrigem, r.unidadeRepo]).filter(Boolean)
+    )].sort();
+    const turmas = [...new Set(
+      rows.flatMap(r => [r.turmaOrigem, r.turmaRepo]).filter(Boolean)
+    )].sort();
+
+    const selU = document.getElementById('filterUnidade');
+    const selT = document.getElementById('filterTurma');
+    const curU = selU.value, curT = selT.value;
+
+    selU.innerHTML = '<option value="">Todas as unidades</option>' +
+      unidades.map(u => `<option value="${escAttr(u)}" ${u === curU ? 'selected' : ''}>${escHtml(u)}</option>`).join('');
+    selT.innerHTML = '<option value="">Todas as turmas</option>' +
+      turmas.map(t => `<option value="${escAttr(t)}" ${t === curT ? 'selected' : ''}>${escHtml(t)}</option>`).join('');
+  }
+
+  function applyFilters() {
+    activeFilters.unidade = document.getElementById('filterUnidade').value;
+    activeFilters.turma = document.getElementById('filterTurma').value;
+    activeFilters.data = document.getElementById('filterData').value;
+    renderTable();
+  }
+
+  function clearFilters() {
+    activeFilters = { unidade: '', turma: '', data: '' };
+    document.getElementById('filterUnidade').value = '';
+    document.getElementById('filterTurma').value = '';
+    document.getElementById('filterData').value = '';
+    renderTable();
+  }
+
+  // ─── EXPORT CSV ───────────────────────────────────
+  function exportCSV() {
+    const headers = ['Nome do Aluno','Turma (Origem)','Unidade (Origem)','Turma p/ Reposição','Unidade p/ Reposição','Data da Aula','Disciplina','Buffet Necessário'];
+    const csvRows = [headers.join(';')];
+    rows.forEach(r => {
+      csvRows.push([
+        r.nome, r.turmaOrigem, r.unidadeOrigem,
+        r.turmaRepo, r.unidadeRepo,
+        r.data ? r.data.split('-').reverse().join('/') : '',
+        r.disciplina,
+        r.buffet ? 'Sim' : 'Não'
+      ].map(v => `"${(v||'').replace(/"/g,'""')}"`).join(';'));
+    });
+    const blob = new Blob(['\uFEFF' + csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'reposicoes_posgrad_' + new Date().toISOString().split('T')[0] + '.csv';
+    a.click();
+    showToast('✓ CSV exportado com sucesso');
+  }
+
+  // ─── HELPERS ──────────────────────────────────────
+  function escHtml(s) {
+    return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+  function escAttr(s) {
+    return (s || '').replace(/"/g,'&quot;');
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+</script>
+</body>
+</html>
